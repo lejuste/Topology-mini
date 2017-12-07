@@ -9,33 +9,35 @@ Fat tree topology for data center networking
 from mininet.topo import Topo
 
 
+class FatTreeNode(object):
+    def __init__(self, pod = 0, sw = 0, host = 0, dpid = None, name = None):
+        self.pod = pod
+        self.sw = sw
+        self.host = host
+        self.dpid = (pod << 16) + (sw << 8) + host
+
+    def __str__(self):
+        return "(%i, %i, %i)" % (self.pod, self.sw, self.host)
+
+    def name_str(self):
+        '''Return name string'''
+        return "%i_%i_%i" % (self.pod, self.sw, self.host)
+
+    def mac_str(self):
+        '''Return MAC string'''
+        return "00:00:00:%02x:%02x:%02x" % (self.pod, self.sw, self.host)
+
+    def ip_str(self):
+        '''Return IP string'''
+        return "10.%i.%i.%i" % (self.pod, self.sw, self.host)
+
 class FatTreeTopo(Topo):    
     LAYER_CORE = 0
     LAYER_AGG = 1
     LAYER_EDGE = 2
     LAYER_HOST = 3
 
-    class FatTreeNode(object):
-        def __init__(self, pod = 0, sw = 0, host = 0, dpid = None, name = None):
-            self.pod = pod
-            self.sw = sw
-            self.host = host
-            self.dpid = (pod << 16) + (sw << 8) + host
 
-        def __str__(self):
-            return "(%i, %i, %i)" % (self.pod, self.sw, self.host)
-
-        def name_str(self):
-            '''Return name string'''
-            return "%i_%i_%i" % (self.pod, self.sw, self.host)
-
-        def mac_str(self):
-            '''Return MAC string'''
-            return "00:00:00:%02x:%02x:%02x" % (self.pod, self.sw, self.host)
-
-        def ip_str(self):
-            '''Return IP string'''
-            return "10.%i.%i.%i" % (self.pod, self.sw, self.host)
 
     def def_nopts(self, layer, name = None):
         '''Return default dict for a FatTree topo.
@@ -64,7 +66,7 @@ class FatTreeTopo(Topo):
 
     def __init__(self, k = 4, speed = 1.0):
         self.k = k
-        self.id_gen = FatTreeTopo.FatTreeNode
+        self.id_gen = FatTreeNode
         self.numPods = k
         self.aggPerPod = k / 2
 
