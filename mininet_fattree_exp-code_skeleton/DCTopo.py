@@ -11,10 +11,32 @@ from mininet.topo import Topo
 
 class FatTreeNode(object):
     def __init__(self, pod = 0, sw = 0, host = 0, dpid = None, name = None):
-        self.pod = pod
-        self.sw = sw
-        self.host = host
-        self.dpid = (pod << 16) + (sw << 8) + host
+        '''Create FatTreeNodeID object from custom params.
+
+        Either (pod, sw, host) or dpid must be passed in.
+
+        @param pod pod ID
+        @param sw switch ID
+        @param host host ID
+        @param dpid optional dpid
+        @param name optional name
+        '''
+        if dpid:
+            self.pod = (dpid & 0xff0000) >> 16
+            self.sw = (dpid & 0xff00) >> 8
+            self.host = (dpid & 0xff)
+            self.dpid = dpid
+        elif name:
+            pod, sw, host = [int(s) for s in name.split('_')]
+            self.pod = pod
+            self.sw = sw
+            self.host = host
+            self.dpid = (pod << 16) + (sw << 8) + host
+        else:
+            self.pod = pod
+            self.sw = sw
+            self.host = host
+            self.dpid = (pod << 16) + (sw << 8) + host
 
     def __str__(self):
         return "(%i, %i, %i)" % (self.pod, self.sw, self.host)
