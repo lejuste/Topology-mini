@@ -10,7 +10,7 @@ from mininet.topo import Topo
 
 
 class FatTreeTopo(Topo):    
-	LAYER_CORE = 0
+    LAYER_CORE = 0
     LAYER_AGG = 1
     LAYER_EDGE = 2
     LAYER_HOST = 3
@@ -56,7 +56,7 @@ class FatTreeTopo(Topo):
 
     def __init__(self, k = 4, speed = 1.0):
 	    self.k = k
-	    self.id_gen = FatTreeTopo.FatTreeNodeID
+	    self.id_gen = FatTreeTopo.FatTreeNode
 	    self.numPods = k
 	    self.aggPerPod = k / 2
 
@@ -70,10 +70,10 @@ class FatTreeTopo(Topo):
 	        for e in edge_sws:
 	            edge_id = self.id_gen(p, e, 1).name_str()
 	            edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
-                    print "-"*30
-                    print "edge id:" , edge_id
-                    print edge_opts
-                    print "-"*30
+                print "-"*30
+                print "edge id:" , edge_id
+                print edge_opts
+                print "-"*30
 	            self.addSwitch(edge_id, **edge_opts)
 
 	        for h in hosts:
