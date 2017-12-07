@@ -49,53 +49,55 @@ class FatTreeTopo(Topo):
             id = self.id_gen(name = name)
             # For hosts only, set the IP
             if layer == self.LAYER_HOST:
+                print id.ip_str()
+                print id.mac_str()
                 d.update({'ip': id.ip_str()})
                 d.update({'mac': id.mac_str()})
-                d.update({'dpid': "%016x" % id.dpid})
-        return d
+            print id.dpid
+            d.update({'dpid': "%016x" % id.dpid})
 
     def __init__(self, k = 4, speed = 1.0):
-	    self.k = k
-	    self.id_gen = FatTreeTopo.FatTreeNode
-	    self.numPods = k
-	    self.aggPerPod = k / 2
+        self.k = k
+        self.id_gen = FatTreeTopo.FatTreeNode
+        self.numPods = k
+        self.aggPerPod = k / 2
 
-	    pods = range(0, k)
-	    core_sws = range(1, k / 2 + 1)
-	    agg_sws = range(k / 2, k)
-	    edge_sws = range(0, k / 2)
-	    hosts = range(2, k / 2 + 2)
+        pods = range(0, k)
+        core_sws = range(1, k / 2 + 1)
+        agg_sws = range(k / 2, k)
+        edge_sws = range(0, k / 2)
+        hosts = range(2, k / 2 + 2)
 
-	    for p in pods:
-	        for e in edge_sws:
-	            edge_id = self.id_gen(p, e, 1).name_str()
-	            edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
+        for p in pods:
+            for e in edge_sws:
+                edge_id = self.id_gen(p, e, 1).name_str()
+                edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
                 print "-"*30
                 print "edge id:" , edge_id
                 print edge_opts
                 print "-"*30
-	            self.addSwitch(edge_id, **edge_opts)
+                self.addSwitch(edge_id, **edge_opts)
 
-	        for h in hosts:
-	            host_id = self.id_gen(p, e, h).name_str()
-	            host_opts = self.def_nopts(self.LAYER_HOST, host_id)
-	            self.addHost(host_id, **host_opts)
-	            self.addLink(host_id, edge_id)
+            for h in hosts:
+                host_id = self.id_gen(p, e, h).name_str()
+                host_opts = self.def_nopts(self.LAYER_HOST, host_id)
+                self.addHost(host_id, **host_opts)
+                self.addLink(host_id, edge_id)
 
-	        for a in agg_sws:
-	            agg_id = self.id_gen(p, a, 1).name_str()
-	            agg_opts = self.def_nopts(self.LAYER_AGG, agg_id)
-	            self.addSwitch(agg_id, **agg_opts)
-	            self.addLink(edge_id, agg_id)
+            for a in agg_sws:
+                agg_id = self.id_gen(p, a, 1).name_str()
+                agg_opts = self.def_nopts(self.LAYER_AGG, agg_id)
+                self.addSwitch(agg_id, **agg_opts)
+                self.addLink(edge_id, agg_id)
 
-	        for a in agg_sws:
-	            agg_id = self.id_gen(p, a, 1).name_str()
-	            c_index = a - k / 2 + 1
-	            for c in core_sws:
-	                core_id = self.id_gen(k, c_index, c).name_str()
-	                core_opts = self.def_nopts(self.LAYER_CORE, core_id)
-	                self.addSwitch(core_id, **core_opts)
-	                self.addLink(core_id, agg_id)
+            for a in agg_sws:
+                agg_id = self.id_gen(p, a, 1).name_str()
+                c_index = a - k / 2 + 1
+                for c in core_sws:
+                    core_id = self.id_gen(k, c_index, c).name_str()
+                    core_opts = self.def_nopts(self.LAYER_CORE, core_id)
+                    self.addSwitch(core_id, **core_opts)
+                    self.addLink(core_id, agg_id)
 
     def port(self, src, dst):
         '''Get port number (optional)
