@@ -44,17 +44,23 @@ class FatTreeTopo(Topo):
         @param name name of node
         @return d dict with layer key/val pair, plus anything else (later)
         '''
+	print "*"*40
         d = {'layer': layer}
+	print "layer: " + str(layer)
+	print "name: " + name 
         if name:
             id = self.id_gen(name = name)
+	    print id
             # For hosts only, set the IP
             if layer == self.LAYER_HOST:
-                print id.ip_str()
-                print id.mac_str()
+                print "ip: " + id.ip_str()
+                print "mac: " + id.mac_str()
                 d.update({'ip': id.ip_str()})
                 d.update({'mac': id.mac_str()})
-            print id.dpid
+            print "dpid: " + str(id.dpid)
             d.update({'dpid': "%016x" % id.dpid})
+        print "*"*40
+	return d
 
     def __init__(self, k = 4, speed = 1.0):
         self.k = k
