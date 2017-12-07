@@ -296,11 +296,15 @@ class FatTreeTopo(StructuredTopo):
         '''
         d = {'layer': layer}
         if name:
+        	print name
             id = self.id_gen(name = name)
             # For hosts only, set the IP
             if layer == self.LAYER_HOST:
-              d.update({'ip': id.ip_str()})
-              d.update({'mac': id.mac_str()})
+            	print id.ip_str()
+            	print id.mac_str()
+              	d.update({'ip': id.ip_str()})
+              	d.update({'mac': id.mac_str()})
+            print id.dpid
             d.update({'dpid': "%016x" % id.dpid})
         return d
 
