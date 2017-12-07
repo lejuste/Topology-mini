@@ -26,8 +26,8 @@ class FatTreeTopo(Topo):
             return "(%i, %i, %i)" % (self.pod, self.sw, self.host)
 
         def name_str(self):
-                '''Return name string'''
-                return "%i_%i_%i" % (self.pod, self.sw, self.host)
+            '''Return name string'''
+            return "%i_%i_%i" % (self.pod, self.sw, self.host)
 
         def mac_str(self):
             '''Return MAC string'''
@@ -49,9 +49,9 @@ class FatTreeTopo(Topo):
             id = self.id_gen(name = name)
             # For hosts only, set the IP
             if layer == self.LAYER_HOST:
-              d.update({'ip': id.ip_str()})
-              d.update({'mac': id.mac_str()})
-            d.update({'dpid': "%016x" % id.dpid})
+                d.update({'ip': id.ip_str()})
+                d.update({'mac': id.mac_str()})
+                d.update({'dpid': "%016x" % id.dpid})
         return d
 
     def __init__(self, k = 4, speed = 1.0):
@@ -70,6 +70,10 @@ class FatTreeTopo(Topo):
 	        for e in edge_sws:
 	            edge_id = self.id_gen(p, e, 1).name_str()
 	            edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
+                    print "-"*30
+                    print "edge id:" , edge_id
+                    print edge_opts
+                    print "-"*30
 	            self.addSwitch(edge_id, **edge_opts)
 
 	        for h in hosts:
