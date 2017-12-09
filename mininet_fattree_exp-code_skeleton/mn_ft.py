@@ -25,6 +25,7 @@ import os
 
 ###################################### Dijkstras Test ######################################################
 import networkx as nx
+from Dijkstras.py import dijkstra
 G=nx.Graph()
 ###################################### Dijkstras Test ######################################################
 
@@ -167,6 +168,7 @@ def findShortestPath(topoG,src,dst):
         graphDic[edge[1]][edge[0]] = 1
     print 'linkDictionary: '
     print graphDic
+    dijkstra(graphDic,src,dst)
     print '+'*50
 
 if __name__ == '__main__':
