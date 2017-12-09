@@ -19,6 +19,7 @@ class Routing(object):
         @param topo Topo object from Net parent
         '''
         self.topo = topo
+        
 
     def get_route(self, src, dst, hash_):
         '''Return flow path.

@@ -86,6 +86,7 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
 
     return net
 
+
 def install_proactive(net, topo):
     """
         Install proactive flow entries for switches.
@@ -104,6 +105,8 @@ def FatTreeTest(args,controller):
     net = FatTreeNet(args, k=K, cpu=args.cpu, bw=BW, queue=QUEUE_SIZE,
             controller=controller)
     net.start()
+
+    findShortestPath(topo.g,'0_0_1',' 0_1_1')
 
     '''
     uncomment and implement the following fucntion if flow tables are installed proactively, 
@@ -135,6 +138,11 @@ def clean():
             Popen('kill %d' % pid, shell=True).wait()
         except:
             pass
+
+def findShortestPath(topo,src,dst):
+    print 'src: ' + src
+    print 'dst: ' + dst
+
 
 if __name__ == '__main__':
 
