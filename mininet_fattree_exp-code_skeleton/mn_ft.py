@@ -25,7 +25,7 @@ import os
 
 ###################################### Dijkstras Test ######################################################
 import networkx as nx
-from Dijkstras.py import dijkstra
+from Dijkstras import dijkstra
 G=nx.Graph()
 ###################################### Dijkstras Test ######################################################
 
@@ -86,7 +86,7 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
 
     ###################################### Dijkstras Test ######################################################
     G = topo.g
-    findShortestPath(G,'0_0_1',' 0_1_1')
+    findShortestPath(G,'0_0_1','0_1_1')
 
     ###################################### Dijkstras Test ######################################################
 
@@ -163,6 +163,9 @@ def findShortestPath(topoG,src,dst):
     graphDic = {}
     for node in topoG.nodes():
         graphDic[node] = {}
+    print '#'*80
+    print topoG.edges()
+    print '#'*80
     for edge in topoG.edges():
         graphDic[edge[0]][edge[1]] = 1
         graphDic[edge[1]][edge[0]] = 1
