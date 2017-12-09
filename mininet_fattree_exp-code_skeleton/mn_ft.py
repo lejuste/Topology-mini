@@ -150,8 +150,13 @@ def clean():
             pass
 
 def findShortestPath(topo,src,dst):
+    print '+'*50
     print 'src: ' + src
     print 'dst: ' + dst
+    print("length of nodes: " + str(len(topo.g.nodes())))
+    print("length of edges: " + str(len(topo.g.edges())))
+    print '+'*50
+
 
 
 if __name__ == '__main__':
