@@ -149,15 +149,25 @@ def clean():
         except:
             pass
 
-def findShortestPath(topo,src,dst):
-    print '+'*50
-    print 'src: ' + src
-    print 'dst: ' + dst
-    print("length of nodes: " + str(len(topo.g.nodes())))
-    print("length of edges: " + str(len(topo.g.edges())))
-    print '+'*50
+def findShortestPath(topoG,src,dst):
+    ''' dijkstra's helper function:
 
+    makes link dictionary
+    calls dijkstras on it
 
+    '''
+    print '+'*50
+    #print 'src: ' + src
+    #print 'dst: ' + dst
+    graphDic = {}
+    for node in topoG.nodes():
+        graphDic[node] = {}
+    for edge in topoG.edges():
+        graphDic[edge[0]][edge[1]] = 1
+        graphDic[edge[1]][edge[0]] = 1
+    print 'linkDictionary: '
+    print graphDic
+    print '+'*50
 
 if __name__ == '__main__':
 
