@@ -84,7 +84,9 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     topo = FatTreeTopo(k)
 
     ###################################### Dijkstras Test ######################################################
-    G = topo
+    G = topo.g
+    findShortestPath(G,'0_0_1',' 0_1_1')
+
     ###################################### Dijkstras Test ######################################################
 
     host = custom(CPULimitedHost, cpu=cpu)
@@ -115,7 +117,6 @@ def FatTreeTest(args,controller):
             controller=controller)
     net.start()
 
-    findShortestPath(topo.g,'0_0_1',' 0_1_1')
 
     '''
     uncomment and implement the following fucntion if flow tables are installed proactively, 
