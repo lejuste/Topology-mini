@@ -14,7 +14,7 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
         path=[]
         pred=dest
         while pred != None: # create 
-            path.append(pred) # append list path to show the previous predecessors
+            path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
         print('shortest path: '+str(path)+" cost="+str(distances[dest])) #print out the path and distances
     else :     
@@ -48,9 +48,8 @@ if __name__ == "__main__":
     #unittest.main()
 
     # switches:
-    0_0_1 0_1_1 0_2_1 0_3_1 1_0_1 1_1_1 1_2_1 1_3_1 2_0_1 2_1_1 2_2_1 2_3_1 3_0_1 3_1_1 3_2_1 3_3_1 4_1_1 4_1_2 4_2_1 4_2_2 
-    #links
-    
+    # 0_0_1 0_1_1 0_2_1 0_3_1 1_0_1 1_1_1 1_2_1 1_3_1 2_0_1 2_1_1 2_2_1 2_3_1 3_0_1 3_1_1 3_2_1 3_3_1 4_1_1 4_1_2 4_2_1 4_2_2 
+
     graph = {'s': {'a': 2, 'b': 1},
             'a': {'s': 3, 'b': 4, 'c':8},
             'b': {'s': 4, 'a': 2, 'd': 2},

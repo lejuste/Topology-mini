@@ -76,7 +76,7 @@ class FatTreeTopo(Topo):
                 d.update({'ip': id.ip_str()})
                 d.update({'mac': id.mac_str()})
             d.update({'dpid': "%016x" % id.dpid})
-        print d
+        #print d
         return d
 
     def __init__(self, k = 4, speed = 1.0):
@@ -94,30 +94,30 @@ class FatTreeTopo(Topo):
         hosts = range(2, k / 2 + 2)
 
         for p in pods:
-            print "p: " + str(p)
+            #print "p: " + str(p)
             for e in edge_sws:
-                print "e: " + str(e)
+                #print "e: " + str(e)
                 edge_id = self.id_gen(p, e, 1).name_str()
                 edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
                 print edge_opts
                 self.addSwitch(edge_id, **edge_opts)
 
                 for h in hosts:
-                    print "h: " + str(h)
+                    #print "h: " + str(h)
                     host_id = self.id_gen(p, e, h).name_str()
                     host_opts = self.def_nopts(self.LAYER_HOST, host_id)
                     self.addHost(host_id, **host_opts)
                     self.addLink(host_id, edge_id)
 
                 for a in agg_sws:
-                    print "a: " + str(a)
+                    #print "a: " + str(a)
                     agg_id = self.id_gen(p, a, 1).name_str()
                     agg_opts = self.def_nopts(self.LAYER_AGG, agg_id)
                     self.addSwitch(agg_id, **agg_opts)
                     self.addLink(edge_id, agg_id)
 
             for a in agg_sws:
-                print "a: " + str(a)
+                #print "a: " + str(a)
                 agg_id = self.id_gen(p, a, 1).name_str()
                 c_index = a - k / 2 + 1
                 for c in core_sws:
