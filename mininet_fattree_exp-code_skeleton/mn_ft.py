@@ -23,6 +23,11 @@ from time import sleep
 from monitor.monitor import monitor_devs_ng
 import os
 
+###################################### Dijkstras Test ######################################################
+import networkx as nx
+G=nx.Graph()
+###################################### Dijkstras Test ######################################################
+
 
 # Number of pods in Fat-Tree 
 K = 4
@@ -77,6 +82,10 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
 
     info('*** Creating the topology')
     topo = FatTreeTopo(k)
+
+    ###################################### Dijkstras Test ######################################################
+    G = topo
+    ###################################### Dijkstras Test ######################################################
 
     host = custom(CPULimitedHost, cpu=cpu)
     link = custom(TCLink, bw=bw, max_queue_size=queue)
