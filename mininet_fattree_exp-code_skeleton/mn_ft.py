@@ -88,7 +88,7 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     ###################################### Hash & Dijkstras Test ######################################################
     print ''
     print 'Hashed Test'
-    HashHelperFunction(topo,'0_0_2','3_1_3')
+    HashHelperFunction(topo,'0_0_2','3_1_2')
     HashHelperFunction(topo,'0_0_3','3_1_2')
     print ''    
     print 'Dijkstra Test'

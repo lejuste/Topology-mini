@@ -98,12 +98,14 @@ class FatTreeTopo(Topo):
             for e in edge_sws:
                 # print "e: " + str(e)
                 edge_id = self.id_gen(p, e, 1).name_str()
+#                print 'edgeID: '+str(edge_id) + 'pod: '+str(p)
                 edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
                 self.addSwitch(edge_id, **edge_opts)
 
                 for h in hosts:
                     # print "h: " + str(h)
                     host_id = self.id_gen(p, e, h).name_str()
+#                    print 'hostID: '+str(host_id) + 'pod: '+str(p)
                     host_opts = self.def_nopts(self.LAYER_HOST, host_id)
                     self.addHost(host_id, **host_opts)
                     self.addLink(host_id, edge_id)
@@ -111,6 +113,7 @@ class FatTreeTopo(Topo):
                 for a in agg_sws:
                     # print "a: " + str(a)
                     agg_id = self.id_gen(p, a, 1).name_str()
+#                    print 'aggID: '+str(agg_id) + 'pod: '+str(p)
                     agg_opts = self.def_nopts(self.LAYER_AGG, agg_id)
                     self.addSwitch(agg_id, **agg_opts)
                     self.addLink(edge_id, agg_id)
@@ -121,6 +124,7 @@ class FatTreeTopo(Topo):
                 c_index = a - k / 2 + 1
                 for c in core_sws:
                     core_id = self.id_gen(k, c_index, c).name_str()
+#                    print 'coreID: '+str(core_id) + 'pod: '+str(p)
                     core_opts = self.def_nopts(self.LAYER_CORE, core_id)
                     self.addSwitch(core_id, **core_opts)
                     self.addLink(core_id, agg_id)
