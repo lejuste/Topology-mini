@@ -1,6 +1,6 @@
 '''algorithm code is taken from http://www.gilles-bertrand.com/2014/03/disjkstra-algorithm-description-shortest-path-pseudo-code-data-structure-example-image.html'''
 
-def HashHelperFunction(topoG,src,dst):
+def HashHelperFunction(topoG,k,src,dst):
     ''' hash's helper function:
 
     makes link dictionary without the certain core switches
@@ -14,13 +14,13 @@ def HashHelperFunction(topoG,src,dst):
     #k = topo.k
     # topoG = topo.g
 
-    k = 4
-
     print '+'*50
     #print 'src: ' + src
     #print 'dst: ' + dst
 
     # del results['A']
+
+    print 'k: ' + k
 
     pathSummary = hash(src+dst)
     print 'path: ' + str(pathSummary)
@@ -35,14 +35,14 @@ def HashHelperFunction(topoG,src,dst):
 
     print 'linkDictionary: '
     print graphDic
-    j = hashedDijkstra(graphDic,src,dst)
+    j = HashedDijkstra(graphDic,src,dst)
     print j
     return j
     print '+'*50
 
 
 
-def hashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
+def HashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
     """ calculates a shortest path tree routed in src
     """    
     # a few sanity checks
