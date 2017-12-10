@@ -20,7 +20,9 @@ def dijkstraHelperFunction(topoG,src,dst):
 
     print 'linkDictionary: '
     print graphDic
-    dijkstra(graphDic,src,dst)
+    j = dijkstra(graphDic,src,dst)
+    print j
+    return j
     print '+'*50
 
 
@@ -42,6 +44,9 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
             path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
         print('shortest path: '+str(path)+" cost="+str(distances[dest])) #print out the path and distances
+        print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
+        return str(tuple(reversed(path)))
+
     else :     
         # if it is the initial  run, initializes the cost
         if not visited: #this sets the source destination to 0 once because visited list
@@ -64,8 +69,8 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
             if k not in visited: #if node is not in visited,
                 unvisited[k] = distances.get(k,float('inf')) # add the weigths of every unvisited node
         x=min(unvisited, key=unvisited.get) # get the lowest weighted node 
-        dijkstra(graph,x,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node
-        
+        return dijkstra(graph,x,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node
+                
 
 
 if __name__ == "__main__":

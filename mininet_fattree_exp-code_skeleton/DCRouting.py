@@ -54,6 +54,6 @@ class DijkstraRouting(Routing):
         for node in topo.g.nodes():
             print node
         print "X"*100
-
+        dijkstraHelperFunction(G,'0_0_1','0_1_1')
         ''' Return flow path. '''
         
