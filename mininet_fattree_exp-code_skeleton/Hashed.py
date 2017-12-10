@@ -18,10 +18,6 @@ def HashHelperFunction(topoG,k,src,dst):
     #print 'src: ' + src
     #print 'dst: ' + dst
 
-    # del results['A']
-
-    # print 'k: ' + str(k)
-    
     # create list of core switches
     core_switch_list = []
     for node in topoG.nodes():
