@@ -20,7 +20,7 @@ def HashHelperFunction(topoG,k,src,dst):
 
     # del results['A']
 
-    print 'k: ' + k
+    print 'k: ' + str(k)
 
     pathSummary = hash(src+dst)
     print 'path: ' + str(pathSummary)
@@ -37,8 +37,8 @@ def HashHelperFunction(topoG,k,src,dst):
     print graphDic
     j = HashedDijkstra(graphDic,src,dst)
     print j
-    return j
     print '+'*50
+    return j
 
 
 
@@ -86,7 +86,7 @@ def HashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
             if k not in visited: #if node is not in visited,
                 unvisited[k] = distances.get(k,float('inf')) # add the weigths of every unvisited node
         x=min(unvisited, key=unvisited.get) # get the lowest weighted node 
-        return hashedDijkstra(graph,x,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node
+        return HashedDijkstra(graph,x,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node
                 
 
 
