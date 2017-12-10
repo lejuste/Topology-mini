@@ -88,8 +88,8 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     G = topo.g
 
     a = topo.k # find k for topo object
-    HashHelperFunction(G,a,'0_0_2','3_1_3')
-    HashHelperFunction(G,a,'0_0_3','3_1_2')
+    HashHelperFunction(topo,'0_0_2','3_1_3')
+    HashHelperFunction(topo,'0_0_3','3_1_2')
     ###################################### Dijkstras Test ######################################################
 
     host = custom(CPULimitedHost, cpu=cpu)

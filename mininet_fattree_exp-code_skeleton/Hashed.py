@@ -1,6 +1,6 @@
 '''algorithm code is taken from http://www.gilles-bertrand.com/2014/03/disjkstra-algorithm-description-shortest-path-pseudo-code-data-structure-example-image.html'''
 
-def HashHelperFunction(topoG,k,src,dst):
+def HashHelperFunction(topo,src,dst):
     ''' hash's helper function:
 
     makes link dictionary without the certain core switches
@@ -9,21 +9,20 @@ def HashHelperFunction(topoG,k,src,dst):
     make a new graph that blocks all 
 
     '''
-    
-    #change topoG to topo & change topo input to topo object
-    #k = topo.k
-    # topoG = topo.g
     print ''
     print '+'*80
     #print 'src: ' + src
     #print 'dst: ' + dst
+    topoG = topo.g
+    k = topp.k
+    print 'topo:'
+    print topo
 
     # create list of core switches
     core_switch_list = []
     for node in topoG.nodes():
         if(node[0]=='4'):
         	core_switch_list.append(node)
-    # print core_switch_list
     
     # finds bucket for given src,dst pair
     flowHash = hash(src+dst)
@@ -49,10 +48,13 @@ def HashHelperFunction(topoG,k,src,dst):
 
     # print 'linkDictionary: '
     # print graphDic
-    j = HashedDijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
-    print j
+    path = HashedDijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
+    print path
+
+    print("dpid: " + str(topo.id_gen(name = "0_0_2").dpid))
+
     print '+'*80
-    return j
+    return path
 
 
 
