@@ -1,5 +1,30 @@
 '''algorithm code is taken from http://www.gilles-bertrand.com/2014/03/disjkstra-algorithm-description-shortest-path-pseudo-code-data-structure-example-image.html'''
 
+def dijkstraHelperFunction(topoG,src,dst):
+    ''' dijkstra's helper function:
+
+    makes link dictionary
+    calls dijkstras on it
+
+    '''
+    print '+'*50
+    #print 'src: ' + src
+    #print 'dst: ' + dst
+
+    graphDic = {} #empty dictionary
+    for node in topoG.nodes(): # make switch dictionary without links
+        graphDic[node] = {}
+    for edge in topoG.edges(): # adds each link to each switch
+        graphDic[edge[0]][edge[1]] = 1
+        graphDic[edge[1]][edge[0]] = 1
+
+    print 'linkDictionary: '
+    print graphDic
+    dijkstra(graphDic,src,dst)
+    print '+'*50
+
+
+
 def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
     """ calculates a shortest path tree routed in src
     """    

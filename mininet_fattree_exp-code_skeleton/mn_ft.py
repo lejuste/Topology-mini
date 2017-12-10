@@ -25,7 +25,7 @@ import os
 
 ###################################### Dijkstras Test ######################################################
 import networkx as nx
-from Dijkstras.py import dijkstra
+from Dijkstras import dijkstraHelperFunction
 G=nx.Graph()
 ###################################### Dijkstras Test ######################################################
 
@@ -86,8 +86,7 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
 
     ###################################### Dijkstras Test ######################################################
     G = topo.g
-    findShortestPath(G,'0_0_1',' 0_1_1')
-
+    dijkstraHelperFunction(G,'0_0_1','0_1_1')
     ###################################### Dijkstras Test ######################################################
 
     host = custom(CPULimitedHost, cpu=cpu)
@@ -149,27 +148,6 @@ def clean():
             Popen('kill %d' % pid, shell=True).wait()
         except:
             pass
-
-def findShortestPath(topoG,src,dst):
-    ''' dijkstra's helper function:
-
-    makes link dictionary
-    calls dijkstras on it
-
-    '''
-    print '+'*50
-    #print 'src: ' + src
-    #print 'dst: ' + dst
-    graphDic = {}
-    for node in topoG.nodes():
-        graphDic[node] = {}
-    for edge in topoG.edges():
-        graphDic[edge[0]][edge[1]] = 1
-        graphDic[edge[1]][edge[0]] = 1
-    print 'linkDictionary: '
-    print graphDic
-    dijkstra(graphDic,src,dst)
-    print '+'*50
 
 if __name__ == '__main__':
 

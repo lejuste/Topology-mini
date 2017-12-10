@@ -4,7 +4,7 @@
 
 import logging
 from copy import copy
-
+from Dijkstras import dijkstraHelperFunction
 
 
 class Routing(object):
@@ -50,5 +50,10 @@ class DijkstraRouting(Routing):
         self.topo = topo
 
     def get_route(self, src, dst):
+        print "X"*100
+        for node in topo.g.nodes():
+            print node
+        print "X"*100
+
         ''' Return flow path. '''
         
