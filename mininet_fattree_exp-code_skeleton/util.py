@@ -5,6 +5,7 @@ based on pipl-pox
 from DCTopo import FatTreeTopo
 from mininet.util import makeNumeric
 from DCRouting import HashedRouting
+from DCRouting import DijkstraRouting
 
 TOPOS = {'ft': FatTreeTopo}
 ROUTING = {'ECMP' : HashedRouting, 'dij' : DijkstraRouting}
