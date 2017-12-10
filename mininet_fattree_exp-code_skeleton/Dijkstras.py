@@ -1,15 +1,16 @@
 '''algorithm code is taken from http://www.gilles-bertrand.com/2014/03/disjkstra-algorithm-description-shortest-path-pseudo-code-data-structure-example-image.html'''
 
-def dijkstraHelperFunction(topoG,src,dst):
+def dijkstraHelperFunction(topo,src,dst):
     ''' dijkstra's helper function:
 
     makes link dictionary
     calls dijkstras on it
 
     '''
-    print '+'*50
     #print 'src: ' + src
     #print 'dst: ' + dst
+
+    topoG = topo.g
 
     graphDic = {} #empty dictionary
     for node in topoG.nodes(): # make switch dictionary without links
@@ -18,12 +19,17 @@ def dijkstraHelperFunction(topoG,src,dst):
         graphDic[edge[0]][edge[1]] = 1
         graphDic[edge[1]][edge[0]] = 1
 
-    print 'linkDictionary: '
-    print graphDic
-    j = dijkstra(graphDic,src,dst)
-    print j
-    return j
-    print '+'*50
+    # print 'linkDictionary: '
+    # print graphDic
+    path = dijkstra(graphDic,src,dst)
+    print path
+
+    dpidPath = []
+    for switch in path:
+        dpidPath.append(topo.id_gen(name = switch).dpid)
+    print dpidPath
+
+    return path
 
 
 
@@ -43,9 +49,9 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
         while pred != None: # create 
             path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
-        print('shortest path: '+str(path)+" cost="+str(distances[dest])) #print out the path and distances
+        # print('shortest path: '+str(path)+" cost="+str(distances[dest])) #print out the path and distances
         print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
-        return str(tuple(reversed(path)))
+        return tuple(reversed(path))
 
     else :     
         # if it is the initial  run, initializes the cost
@@ -87,4 +93,4 @@ if __name__ == "__main__":
             'd': {'b': 1, 'c': 11, 't': 5},
             't': {'c': 3, 'd': 5}}
 
-    dijkstra(graph,'s','t')
+#    dijkstra(graph,'s','t')

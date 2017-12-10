@@ -9,14 +9,10 @@ def HashHelperFunction(topo,src,dst):
     make a new graph that blocks all 
 
     '''
-    print ''
-    print '+'*80
     #print 'src: ' + src
     #print 'dst: ' + dst
     topoG = topo.g
-    k = topp.k
-    print 'topo:'
-    print topo
+    k = topo.k
 
     # create list of core switches
     core_switch_list = []
@@ -51,9 +47,12 @@ def HashHelperFunction(topo,src,dst):
     path = HashedDijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
     print path
 
-    print("dpid: " + str(topo.id_gen(name = "0_0_2").dpid))
+    # make dpid list
+    dpidPath = []
+    for switch in path:
+        dpidPath.append(topo.id_gen(name = switch).dpid)
+    print dpidPath
 
-    print '+'*80
     return path
 
 
@@ -77,7 +76,7 @@ def HashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
             path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
         print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
-        return str(tuple(reversed(path)))
+        return tuple(reversed(path))
 
     else :     
         # if it is the initial  run, initializes the cost
@@ -106,11 +105,7 @@ def HashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
 
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    #unittest.main()
-
-    # switches:
-    # 0_0_1 0_1_1 0_2_1 0_3_1 1_0_1 1_1_1 1_2_1 1_3_1 2_0_1 2_1_1 2_2_1 2_3_1 3_0_1 3_1_1 3_2_1 3_3_1 4_1_1 4_1_2 4_2_1 4_2_2 
+    # testing not possible cause topo object required
 
     graph = {'s': {'a': 2, 'b': 1},
             'a': {'s': 3, 'b': 4, 'c':8},
@@ -119,35 +114,3 @@ if __name__ == "__main__":
             'd': {'b': 1, 'c': 11, 't': 5},
             't': {'c': 3, 'd': 5}}
     
-    # check for same source and destination hosts
-    # hash the results or hash source and destination
-    '''
-	hash source and destination on initial call
-	hash[0]:	run dijkstra's once
-	hash[1]:	run dijkstra's twice? skipping initial
-				how do you block the first initial path and make it search another?
-
-	hash[2]:
-	hash[3]:
-    '''
-    # hashedDijkstra(graph,'s','t',visited=[],distances={},predecessors={})
-    HashHelperFunction(graph,'s','t')
-
-
-    # hash1 = hash('0_0_1 0_1_1')
-    # print hash1
-    # print hash1%4
-    # hash2 = hash('1_1_1 1_2_1')
-    # print hash2
-    # print hash2%4    
-    # hash3 = hash('2_3_1 3_0_1')
-    # print hash3
-    # print hash3%4    
-    # hash4 = hash('0_0_1 0_1_1')
-    # print hash4
-    # print hash4%4    
-    # hash5 = hash('4_1_1 4_1_2')
-    # print hash5
-    # print hash5%4
-
-

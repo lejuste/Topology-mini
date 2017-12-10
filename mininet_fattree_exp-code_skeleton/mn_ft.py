@@ -23,11 +23,12 @@ from time import sleep
 from monitor.monitor import monitor_devs_ng
 import os
 
-###################################### Hashed Test ######################################################
+###################################### Hash & Dijkstras Test ######################################################
 import networkx as nx
 from Hashed import HashHelperFunction
+from Dijkstras import dijkstraHelperFunction
 G=nx.Graph()
-###################################### Hashed Test ######################################################
+###################################### Hash & Dijkstras Test ######################################################
 
 
 # Number of pods in Fat-Tree 
@@ -84,13 +85,17 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     info('*** Creating the topology')
     topo = FatTreeTopo(k)
 
-    ###################################### Dijkstras Test ######################################################
-    G = topo.g
-
-    a = topo.k # find k for topo object
+    ###################################### Hash & Dijkstras Test ######################################################
+    print ''
+    print 'Hashed Test'
     HashHelperFunction(topo,'0_0_2','3_1_3')
     HashHelperFunction(topo,'0_0_3','3_1_2')
-    ###################################### Dijkstras Test ######################################################
+    print ''    
+    print 'Dijkstra Test'
+    dijkstraHelperFunction(topo,'0_0_2','3_1_2')
+    dijkstraHelperFunction(topo,'0_0_3','3_1_2')
+    print ''
+    ###################################### Hash & Dijkstras Test ######################################################
 
     host = custom(CPULimitedHost, cpu=cpu)
     link = custom(TCLink, bw=bw, max_queue_size=queue)
