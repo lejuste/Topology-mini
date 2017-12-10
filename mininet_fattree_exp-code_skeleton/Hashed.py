@@ -13,31 +13,49 @@ def HashHelperFunction(topoG,k,src,dst):
     #change topoG to topo & change topo input to topo object
     #k = topo.k
     # topoG = topo.g
-
-    print '+'*50
+    print ''
+    print '+'*80
     #print 'src: ' + src
     #print 'dst: ' + dst
 
     # del results['A']
 
-    print 'k: ' + str(k)
-
-    pathSummary = hash(src+dst)
-    print 'path: ' + str(pathSummary)
-    print pathSummary%4
+    # print 'k: ' + str(k)
+    
+    # create list of core switches
+    core_switch_list = []
+    for node in topoG.nodes():
+        if(node[0]=='4'):
+        	core_switch_list.append(node)
+    # print core_switch_list
+    
+    # finds bucket for given src,dst pair
+    flowHash = hash(src+dst)
+    bucket_num = flowHash%4
+    print 'bucket_num: ' + str(bucket_num)
 
     graphDic = {} #empty dictionary
-    for node in topoG.nodes(): # make switch dictionary without links
-        graphDic[node] = {}
+    for node in topoG.nodes(): # make empty switch dictionary without unwanted core switches
+        if(node[0] =='4'):
+            if(node == core_switch_list[bucket_num]):
+                graphDic[node] = {}
+        else:
+            graphDic[node] = {}
+    # print graphDic
     for edge in topoG.edges(): # adds each link to each switch
-        graphDic[edge[0]][edge[1]] = 1
-        graphDic[edge[1]][edge[0]] = 1
+        if(edge[1] in core_switch_list): #found out all core links list coreswitch as second switch in link tuple
+            if(edge[1] == core_switch_list[bucket_num]):
+                graphDic[edge[0]][edge[1]] = 1
+                graphDic[edge[1]][edge[0]] = 1
+        else:
+            graphDic[edge[0]][edge[1]] = 1
+            graphDic[edge[1]][edge[0]] = 1
 
-    print 'linkDictionary: '
-    print graphDic
-    j = HashedDijkstra(graphDic,src,dst)
+    # print 'linkDictionary: '
+    # print graphDic
+    j = HashedDijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
     print j
-    print '+'*50
+    print '+'*80
     return j
 
 
@@ -60,7 +78,6 @@ def HashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
         while pred != None: # create 
             path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
-        print('shortest path: '+str(path)+" cost="+str(distances[dest])) #print out the path and distances
         print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
         return str(tuple(reversed(path)))
 
