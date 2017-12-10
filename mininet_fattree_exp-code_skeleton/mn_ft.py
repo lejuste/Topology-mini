@@ -23,6 +23,12 @@ from time import sleep
 from monitor.monitor import monitor_devs_ng
 import os
 
+###################################### Dijkstras Test ######################################################
+import networkx as nx
+from Dijkstras import dijkstraHelperFunction
+G=nx.Graph()
+###################################### Dijkstras Test ######################################################
+
 
 # Number of pods in Fat-Tree 
 K = 4
@@ -78,6 +84,11 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     info('*** Creating the topology')
     topo = FatTreeTopo(k)
 
+    ###################################### Dijkstras Test ######################################################
+    G = topo.g
+    dijkstraHelperFunction(G,'0_0_1','0_1_1')
+    ###################################### Dijkstras Test ######################################################
+
     host = custom(CPULimitedHost, cpu=cpu)
     link = custom(TCLink, bw=bw, max_queue_size=queue)
     
@@ -85,6 +96,7 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
             controller=RemoteController)
 
     return net
+
 
 def install_proactive(net, topo):
     """
@@ -104,6 +116,7 @@ def FatTreeTest(args,controller):
     net = FatTreeNet(args, k=K, cpu=args.cpu, bw=BW, queue=QUEUE_SIZE,
             controller=controller)
     net.start()
+
 
     '''
     uncomment and implement the following fucntion if flow tables are installed proactively, 
