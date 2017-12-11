@@ -82,17 +82,24 @@ class DCController(EventMixin):
         core.openflow.addListeners(self)
 
     def getSrcIp(self, packet):
-        return str(packet.payload).split(" ")[5].split(">")[0]
+        #return str(packet.payload).split(" ")[5].split(">")[0]
+        l = str(packet.payload).split(">")[1].split(" ")[1].split(">")
+        return str(l[0])
 
     def getDestIp(self, packet):
-        return str(packet.payload).split(" ")[5].split(">")[1]
+        #return str(packet.payload).split(" ")[5].split(">")[1]
+        l = str(packet.payload).split(">")[1].split(" ")[1].split(">")
+        return str(l[1])
 
     def getMacSrcAddr(self, packet):
-        return str(packet.payload).split(" ")[4].split(">")[0]
+        #return str(packet.payload).split(" ")[4].split(">")[0]
+        l = str(packet.payload).split(">")[0].split(" ")
+        return str(l[len(l)-1])
 
     def getMacDestAddr(self, packet):
-        return str(packet.payload).split(" ")[4].split(">")[1]
-
+        #return str(packet.payload).split(" ")[4].split(">")[1]
+        l = str(packet.payload).split(">")[1].split(" ")
+        return str(l[0])
     def _raw_dpids(self, arr):
         "Convert a list of name strings (from Topo object) to numbers."
         return [self.t.id_gen(name = a).dpid for a in arr]
@@ -109,8 +116,8 @@ class DCController(EventMixin):
         dpid = event.dpid
         in_port = event.port
         t = self.t
-        print("in_port: " + str(in_port))
-        print("event_dpid: " + str(dpid))
+        #print("in_port: " + str(in_port))
+        #print("event_dpid: " + str(dpid))
         nodes = t.layer_nodes(t.LAYER_EDGE)
         dpids = self._raw_dpids(t.layer_nodes(t.LAYER_EDGE))
         #print("dpids: " + str(dpids))
@@ -119,28 +126,41 @@ class DCController(EventMixin):
         for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
             ports = []
             sw_name = t.id_gen(dpid = sw).name_str()
-            print("sw_name: " + str(sw_name))
-            print("sw_dpid: " + str(sw))
+            #print("sw_name: " + str(sw_name))
+            #print("sw_dpid: " + str(sw))
+            switch_Hosts = []
             for host in t.layer_nodes(t.LAYER_HOST):
+                if((host[0] == sw_name[0])and (host[2] == sw_name[2])):
+        	    switch_Hosts.append(host)
+            #print(switch_Hosts)
+            for host in switch_Hosts:
                 sw_port, host_port = t.port(sw_name, host)
-                print("sw_port: " + str(sw_port))
-                print("host_port: " + str(host_port))
+                #print("sw_port: " + str(sw_port))
+                #print("host_port: " + str(host_port))
                 if sw != dpid or (sw == dpid and in_port != sw_port):
-                    print("Appended")
+                    #print("Appended")
                     ports.append(sw_port)
-            print ports
+            #print ports
+            ports = [1,2]
             for port in ports:
                 self.switches[sw].send_packet_data(port, event.data)
+	'''for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
+            if 
+	    self.switches[sw].send_packet_data(port, event.data)'''
     
 
     def _install_reactive_path(self, event, out_dpid, final_out_port, packet):
         ''' Install entries on route between two switches. '''
         print("INSTALL REACTIVE PATH CALLED")
+        pass
         
     def _handle_FlowStatsReceived (self, event):
         pass
 
     def _handle_PacketIn(self, event):
+
+        if self.all_switches_up == False:
+            return
         packet = event.parse() 
         dpid = event.dpid
         in_port = event.port       
@@ -155,15 +175,39 @@ class DCController(EventMixin):
         print("event data: " + str(event.data))
         print("Src MAC: " + self.getMacSrcAddr(packet))
         print("Dest MAC: " + self.getMacDestAddr(packet))'''
-
-        self.macTable[self.getMacSrcAddr(packet)] = (dpid, in_port)
+        #p = packet.type
+        #print(str(p))
+        l = str(packet.payload).split(" ")
+        if(str(l[0].lstrip("[")) != "ARP"):
+            return
+        srcMac = self.getMacSrcAddr(packet)
+        if(self.macTable.has_key(srcMac) or len(str(srcMac).split(":")) != 6):
+           print("key exists")
+           print("srcMac: " + str(srcMac))
+           print(dpid)
+           print(in_port)
+           print(self.macTable)
+           print(str(packet.payload))
+           return
+           
+        else:
+           self.macTable[srcMac] = (dpid, in_port)
+           print(self.macTable)
         destMac = self.getMacDestAddr(packet)   
-        print "*"*20
-        print(packet.payload)
-        print(self.macTable)
-        print "*"*20
+        #print "*"*20
+        #print(packet.payload)
+        #print(self.macTable)
+        #print "*"*20
+        
+       
+        #print(str(l[0]).lstrip("["))
+	
+        if len(l) != 6:
+            print("payload: "+str(packet.payload))
+            return
+        #print("INSIDE IF")
         if destMac in self.macTable:
-            print("INSIDE IF")
+            #print("INSIDE IF")
             out_dpid, out_port = self.macTable[destMac]
             self._install_reactive_path(event, out_dpid, out_port, packet)
             self.switches[out_dpid].send_packet_data(out_port, event.data)

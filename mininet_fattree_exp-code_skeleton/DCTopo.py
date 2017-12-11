@@ -178,7 +178,7 @@ class FatTreeTopo(Topo):
         LAYER_EDGE = 2
         LAYER_HOST = 3
 
-        src_layer = 5
+        src_layer = 6
         if src in self.coreList:
             src_layer = LAYER_CORE
         if src in self.aggList:
@@ -188,7 +188,7 @@ class FatTreeTopo(Topo):
         if src in self.hostList:
             src_layer = LAYER_HOST
 
-        dst_layer = 5
+        dst_layer = 6
         if dst in self.coreList:
             dst_layer = LAYER_CORE
         if dst in self.aggList:
@@ -198,10 +198,10 @@ class FatTreeTopo(Topo):
         if dst in self.hostList:
             dst_layer = LAYER_HOST
 
-        print 'src' + src
+        '''print 'src' + src
         print 'src layer: ' + str(src_layer)
         print 'dst' + dst
-        print 'dst layer: ' + str(dst_layer)
+        print 'dst layer: ' + str(dst_layer)'''
 
         src_id = self.id_gen(name = src)
         dst_id = self.id_gen(name = dst)
