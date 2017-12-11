@@ -77,7 +77,7 @@ class FatTreeTopo(Topo):
                 d.update({'mac': id.mac_str()})
             d.update({'dpid': "%016x" % id.dpid})
         # print d
-        return d
+        return d 
 
     def __init__(self, k = 4, speed = 1.0):
         super(FatTreeTopo, self).__init__()
@@ -86,6 +86,11 @@ class FatTreeTopo(Topo):
         self.id_gen = FatTreeNode
         self.numPods = k
         self.aggPerPod = k / 2
+
+	self.hostList = []
+        self.edgeList = []
+        self.aggList = []
+        self.coreList = []
 
         pods = range(0, k)
         core_sws = range(1, k / 2 + 1)
@@ -100,6 +105,7 @@ class FatTreeTopo(Topo):
                 edge_id = self.id_gen(p, e, 1).name_str()
 #                print 'edgeID: '+str(edge_id) + 'pod: '+str(p)
                 edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
+		self.edgeList.append(edge_id)
                 self.addSwitch(edge_id, **edge_opts)
 
                 for h in hosts:
@@ -107,6 +113,7 @@ class FatTreeTopo(Topo):
                     host_id = self.id_gen(p, e, h).name_str()
 #                    print 'hostID: '+str(host_id) + 'pod: '+str(p)
                     host_opts = self.def_nopts(self.LAYER_HOST, host_id)
+		    self.hostList.append(host_id)
                     self.addHost(host_id, **host_opts)
                     self.addLink(host_id, edge_id)
 
@@ -115,6 +122,7 @@ class FatTreeTopo(Topo):
                     agg_id = self.id_gen(p, a, 1).name_str()
 #                    print 'aggID: '+str(agg_id) + 'pod: '+str(p)
                     agg_opts = self.def_nopts(self.LAYER_AGG, agg_id)
+		    self.aggList.append(agg_id)
                     self.addSwitch(agg_id, **agg_opts)
                     self.addLink(edge_id, agg_id)
 
@@ -126,8 +134,21 @@ class FatTreeTopo(Topo):
                     core_id = self.id_gen(k, c_index, c).name_str()
 #                    print 'coreID: '+str(core_id) + 'pod: '+str(p)
                     core_opts = self.def_nopts(self.LAYER_CORE, core_id)
+		    self.coreList.append(core_id)
                     self.addSwitch(core_id, **core_opts)
                     self.addLink(core_id, agg_id)
+
+    def layer_nodes(self, layer):
+	#return list of node names in specified layer
+	if(layer == self.LAYER_CORE):
+	    return self.coreList
+	if(layer == self.LAYER_AGG):
+	    return self.aggList
+	if(layer == self.LAYER_EDGE):
+	    return self.edgeList
+	if(layer == self.LAYER_HOST):
+	    return self.hostList
+	
 
     def port(self, src, dst):
         '''Get port number (optional)
@@ -187,4 +208,4 @@ class FatTreeTopo(Topo):
 
         return (src_port, dst_port)
   
-
+topos = {"ft" : ( lambda: FatTreeTopo() )}

@@ -80,6 +80,22 @@ class DCController(EventMixin):
         self.r = r          # Routng object
         self.all_switches_up = False
         core.openflow.addListeners(self)
+
+    def getSrcIp(self, packet):
+        return str(packet.payload).split(" ")[5].split(">")[0]
+
+    def getDestIp(self, packet):
+        return str(packet.payload).split(" ")[5].split(">")[1]
+
+    def getMacSrcAddr(self, packet):
+	return str(packet.payload).split(" ")[4].split(">")[0]
+
+    def getMacDestAddr(self, packet):
+	return str(packet.payload).split(" ")[4].split(">")[1]
+
+    def _raw_dpids(self, arr):
+        "Convert a list of name strings (from Topo object) to numbers."
+        return [self.t.id_gen(name = a).dpid for a in arr]
     
     def _ecmp_hash(self, packet):
         ''' Return an ECMP-style 5-tuple hash for TCP/IP packets, otherwise 0.
@@ -88,22 +104,68 @@ class DCController(EventMixin):
         
     def _flood(self, event):
         ''' Broadcast to every output port '''
-        pass
+        print("FLOOD IS CALLED")
+	packet = event.parse()
+	dpid = event.dpid
+	in_port = event.port
+	t = self.t
+	
+	nodes = t.layer_nodes(t.LAYER_EDGE)
+	dpids = self._raw_dpids(t.layer_nodes(t.LAYER_EDGE))
+	print("dpids: " + str(dpids))
+	print("nodes: " + str(nodes))
+
+	for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
+	    ports = []
+      	    sw_name = t.id_gen(dpid = sw).name_str()
+	    for host in t.layer_nodes(t.LAYER_HOST):
+                sw_port, host_port = t.port(sw_name, host)
+        	if sw != dpid or (sw == dpid and in_port != sw_port):
+		    ports.append(sw_port)
+	    for port in ports:
+		self.switches[sw].send_packet_data(port, event.data)
+	
 
     def _install_reactive_path(self, event, out_dpid, final_out_port, packet):
         ''' Install entries on route between two switches. '''
-        pass
+        print("INSTALL REACTIVE PATH CALLED")
         
     def _handle_FlowStatsReceived (self, event):
         pass
 
     def _handle_PacketIn(self, event):
-        pass
+	packet = event.parse() 
+	dpid = event.dpid
+	in_port = event.port       
+	t = self.t
+
+	print("Packet Arrived")
+	print("src: " + self.getSrcIp(packet))
+	print("dest: " + self.getDestIp(packet))
+	print("packet: " + str(packet.payload))
+	print("dpid: " + str(dpid))
+	print("in_port: " + str(in_port))
+	print("event data: " + str(event.data))
+	print("Src MAC: " + self.getMacSrcAddr(packet))
+	print("Dest MAC: " + self.getMacDestAddr(packet))
+	
+	self.macTable[self.getMacSrcAddr(packet)] = (dpid, in_port)
+	destMac = self.getMacDestAddr(packet)	
+
+	if destMac in self.macTable:
+	    out_dpid, out_port = self.macTable[destMac]
+	    self._install_reactive_path(event, out_dpid, out_port, packet)
+	    self.switches[out_dpid].send_packet_data(out_port, event.data)
+	else:
+	    self._flood(event)
+	    
+
+
 
     def _handle_ConnectionUp(self, event):
         sw = self.switches.get(event.dpid)
         sw_str = dpidToStr(event.dpid)
-        sw_name = self.t.node_gen(dpid = event.dpid).name_str()
+        sw_name = self.t.id_gen(dpid = event.dpid).name_str()
         
         if sw_name not in self.t.switches():
             log.warn("Ignoring unknown switch %s" % sw_str)
