@@ -124,7 +124,7 @@ class DCController(EventMixin):
         #print("nodes: " + str(nodes))
 
         for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
-            ports = []
+            '''    ports = []
             sw_name = t.id_gen(dpid = sw).name_str()
             #print("sw_name: " + str(sw_name))
             #print("sw_dpid: " + str(sw))
@@ -140,7 +140,7 @@ class DCController(EventMixin):
                 if sw != dpid or (sw == dpid and in_port != sw_port):
                     #print("Appended")
                     ports.append(sw_port)
-            #print ports
+            #print ports'''
             ports = [1,2]
             for port in ports:
                 self.switches[sw].send_packet_data(port, event.data)
@@ -152,7 +152,20 @@ class DCController(EventMixin):
     def _install_reactive_path(self, event, out_dpid, final_out_port, packet):
         ''' Install entries on route between two switches. '''
         print("INSTALL REACTIVE PATH CALLED")
-        pass
+        '''in_name = self.t.id_gen(dpid = event.dpid).name_str()
+        out_name = self.t.id_gen(dpid = out_dpid).name_str()
+        hash_ = self._ecmp_hash(packet)
+        route = self.r.get_route(in_name, out_name, hash_)
+        log.info("route: %s" % route)
+        match = of.ofp_match.from_packet(packet)
+        for i, node in enumerate(route):
+            node_dpid = self.t.id_gen(name = node).dpid
+            if i < len(route) - 1:
+                next_node = route[i + 1]
+                out_port, next_in_port = self.t.port(node, next_node)
+            else:
+                out_port = final_out_port
+            self.switches[node_dpid].install(out_port, match, idle_timeout = IDLE_TIMEOUT)'''
         
     def _handle_FlowStatsReceived (self, event):
         pass
@@ -161,54 +174,34 @@ class DCController(EventMixin):
 
         if self.all_switches_up == False:
             return
-        packet = event.parse() 
+        packet = event.parsed
         dpid = event.dpid
         in_port = event.port       
         t = self.t
 
-        '''print("Packet Arrived")
-        print("src: " + self.getSrcIp(packet))
-        print("dest: " + self.getDestIp(packet))
+        #print statements
+        print("srcip: "+str(packet.next.srcip))
+        print("destip: " + str(packet.next.dstip))
+        print("MAC: " + str(packet.src))
+        print("type: " + str(packet.type))
         print("packet: " + str(packet.payload))
-        print("dpid: " + str(dpid))
-        print("in_port: " + str(in_port))
-        print("event data: " + str(event.data))
-        print("Src MAC: " + self.getMacSrcAddr(packet))
-        print("Dest MAC: " + self.getMacDestAddr(packet))'''
-        #p = packet.type
-        #print(str(p))
-        l = str(packet.payload).split(" ")
-        if(str(l[0].lstrip("[")) != "ARP"):
+
+        #if packet is notipv4, ignore
+        if(str(packet.src) == "2048"):
             return
-        srcMac = self.getMacSrcAddr(packet)
-        if(self.macTable.has_key(srcMac) or len(str(srcMac).split(":")) != 6):
-           print("key exists")
-           print("srcMac: " + str(srcMac))
-           print(dpid)
-           print(in_port)
-           print(self.macTable)
-           print(str(packet.payload))
-           return
+
+        #get soruce and destination mac addresses
+        srcMac = packet.src
+        destMac = packet.dst
+
+        #add source mac address in mac table, with dpid and in_port as values
+        self.macTable[str(srcMac)] = (dpid, in_port)
+        print(self.macTable)
            
-        else:
-           self.macTable[srcMac] = (dpid, in_port)
-           print(self.macTable)
-        destMac = self.getMacDestAddr(packet)   
-        #print "*"*20
-        #print(packet.payload)
-        #print(self.macTable)
-        #print "*"*20
-        
-       
-        #print(str(l[0]).lstrip("["))
-	
-        if len(l) != 6:
-            print("payload: "+str(packet.payload))
-            return
-        #print("INSIDE IF")
-        if destMac in self.macTable:
-            #print("INSIDE IF")
-            out_dpid, out_port = self.macTable[destMac]
+
+        #if destination mac address is in mac table, install reactive path. else flood. 
+        if str(destMac) in self.macTable:
+            out_dpid, out_port = self.macTable[str(destMac)]
             self._install_reactive_path(event, out_dpid, out_port, packet)
             self.switches[out_dpid].send_packet_data(out_port, event.data)
         else:
