@@ -98,19 +98,22 @@ class FatTreeTopo(Topo):
         edge_sws = range(0, k / 2)
         hosts = range(2, k / 2 + 2)
 
+        host_port = 1
+        
+        
+      
         for p in pods:
             # print "p: " + str(p)
-            count = 1;
+            agg_port = 1
             for e in edge_sws:
                 # print "e: " + str(e)
+                edge_port = 1
                 edge_id = self.id_gen(p, e, 1).name_str()
 #                print 'edgeID: '+str(edge_id) + 'pod: '+str(p)
                 edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
                 self.edgeList.append(edge_id)
                 self.addSwitch(edge_id, **edge_opts)
                 
-                upCount = 1
-                downCount = 1
                 for h in hosts:
                     # print "h: " + str(h)
                     host_id = self.id_gen(p, e, h).name_str()
@@ -118,8 +121,11 @@ class FatTreeTopo(Topo):
                     host_opts = self.def_nopts(self.LAYER_HOST, host_id)
                     self.hostList.append(host_id)
                     self.addHost(host_id, **host_opts)
-                    self.addLink(host_id, edge_id)#, upCount, downCount)
-                    downCount = downCount + 1          
+                    self.addLink(host_id, edge_id, host_port, edge_port)
+                    
+                    edge_port += 1
+                
+                edge_port = 3        
 
                 for a in agg_sws:
                     # print "a: " + str(a)
@@ -128,11 +134,15 @@ class FatTreeTopo(Topo):
                     agg_opts = self.def_nopts(self.LAYER_AGG, agg_id)
                     self.aggList.append(agg_id)
                     self.addSwitch(agg_id, **agg_opts)
-                    self.addLink(edge_id, agg_id)#, upCount, downCount)
+                    self.addLink(edge_id, agg_id, edge_port, agg_port)
+                    edge_port += 1
+                agg_port += 1
 
-
+            
+            print("")
             for a in agg_sws:
                 # print "a: " + str(a)
+                agg_port = 3
                 agg_id = self.id_gen(p, a, 1).name_str()
                 c_index = a - k / 2 + 1
                 for c in core_sws:
@@ -141,7 +151,9 @@ class FatTreeTopo(Topo):
                     core_opts = self.def_nopts(self.LAYER_CORE, core_id)
                     self.coreList.append(core_id)
                     self.addSwitch(core_id, **core_opts)
-                    self.addLink(core_id, agg_id)
+                    self.addLink(core_id, agg_id, p+1, agg_port)
+                    #print("("+ str(core_id) + ", " + str(agg_id) + ") = (" + str(p+1)  + ", " + str(agg_port)+ ")")
+                    agg_port += 1
 
     def layer_nodes(self, layer):
     #return list of node names in specified layer
@@ -154,7 +166,6 @@ class FatTreeTopo(Topo):
         if(layer == self.LAYER_HOST):
             return self.hostList
     
-
     def port(self, src, dst):
         '''Get port number (optional)
 
@@ -206,44 +217,59 @@ class FatTreeTopo(Topo):
         '''print 'src' + src
         print 'src layer: ' + str(src_layer)
         print 'dst' + dst
-        print 'dst layer: ' + str(dst_layer)'''
+        print 'dst layer: ' + str(dst_layer)
+
+        print 'src: '
+        print src
+        print 'dst '
+        print dst
+        print 'switchPort: '
+        print dst[2]
+        print ''
+        print str(int(dst[2])+1)
+        print '' '''
 
         src_id = self.id_gen(name = src)
         dst_id = self.id_gen(name = dst)
 
         if src_layer == LAYER_HOST and dst_layer == LAYER_EDGE:
-            src_port = 0
-            dst_port = (src_id.host - 2) * 2 + 1
-        elif src_layer == LAYER_EDGE and dst_layer == LAYER_CORE:
-            src_port = (dst_id.sw - 2) * 2
-            dst_port = src_id.pod
-        elif src_layer == LAYER_EDGE and dst_layer == LAYER_AGG:
-            src_port = (dst_id.sw - self.k / 2) * 2
-            dst_port = src_id.sw * 2 + 1
-        elif src_layer == LAYER_AGG and dst_layer == LAYER_CORE:
-            src_port = (dst_id.host - 1) * 2
-            dst_port = src_id.pod
-        elif src_layer == LAYER_CORE and dst_layer == LAYER_AGG:
-            src_port = dst_id.pod
-            dst_port = (src_id.host - 1) * 2
-        elif src_layer == LAYER_AGG and dst_layer == LAYER_EDGE:
-            src_port = dst_id.sw * 2 + 1
-            dst_port = (src_id.sw - self.k / 2) * 2
-        elif src_layer == LAYER_CORE and dst_layer == LAYER_EDGE:
-            src_port = dst_id.pod
-            dst_port = (src_id.sw - 2) * 2
+            src_port = 1
+            #print dst[4]
+            dst_port = int(src[4])-1
         elif src_layer == LAYER_EDGE and dst_layer == LAYER_HOST:
-            src_port = (dst_id.host - 2) * 2 + 1
-            dst_port = 0
+            #print src[0]
+            #print src[2]
+            #print src[4]
+            src_port = int(dst[4])-1
+            dst_port = 1
+
+        elif src_layer == LAYER_EDGE and dst_layer == LAYER_AGG:
+            src_port = int(dst[2])+1
+            dst_port = int(src[2])+1
+        elif src_layer == LAYER_AGG and dst_layer == LAYER_EDGE:
+            src_port = int(dst[2])+1
+            dst_port = int(src[2])+1
+
+        elif src_layer == LAYER_AGG and dst_layer == LAYER_CORE:
+            src_port = int(dst[4])+2
+            dst_port = int(src[0])+1
+        elif src_layer == LAYER_CORE and dst_layer == LAYER_AGG:
+            src_port = int(dst[0])+1
+            dst_port = int(src[4])+2
+
         else:
             raise Exception("Could not find port leading to given dst switch")
-
+        '''
         # Shift by one; as of v0.9, OpenFlow ports are 1-indexed.
         if src_layer != LAYER_HOST:
             src_port += 1
         if dst_layer != LAYER_HOST:
-            dst_port += 1
+            dst_port += 1'''
+        
+        #print 'source switch:'+str(src)+'source port'+str(src_port)
+        #print 'destination switch:'+str(dst)+'destination port'+str(dst_port)
 
         return (src_port, dst_port)
+    
   
 topos = {"ft" : ( lambda: FatTreeTopo() )}

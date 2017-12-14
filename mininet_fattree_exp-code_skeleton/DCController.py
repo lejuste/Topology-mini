@@ -113,7 +113,7 @@ class DCController(EventMixin):
         
     def _flood(self, event):
         ''' Broadcast to every output port '''
-        #print("FLOOD IS CALLED")
+        print("FLOOD IS CALLED")
         packet = event.parse()
         dpid = event.dpid
         in_port = event.port
@@ -126,7 +126,7 @@ class DCController(EventMixin):
         #print("nodes: " + str(nodes))
 
         for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
-            '''    ports = []
+            ports = []
             sw_name = t.id_gen(dpid = sw).name_str()
             #print("sw_name: " + str(sw_name))
             #print("sw_dpid: " + str(sw))
@@ -143,7 +143,7 @@ class DCController(EventMixin):
                     #print("Appended")
                     ports.append(sw_port)
             #print ports'''
-            ports = [1,2]
+            #ports = [1,2]
             for port in ports:
                 self.switches[sw].send_packet_data(port, event.data)
 	'''for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
