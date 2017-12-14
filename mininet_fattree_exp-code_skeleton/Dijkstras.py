@@ -21,7 +21,8 @@ def dijkstraHelperFunction(topo,src,dst):
 
     # print 'linkDictionary: '
     # print graphDic
-    path = dijkstra(graphDic,src,dst)
+    #path = dijkstra(graphDic,src,dst)
+    path = dijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
     print path
 
     dpidPath = []
@@ -74,9 +75,13 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
         for k in graph: # for each node
             if k not in visited: #if node is not in visited,
                 unvisited[k] = distances.get(k,float('inf')) # add the weigths of every unvisited node
+        x=0
+        #print("Unvistited: " + str(unvisited))
+        #if unvisited:
         x=min(unvisited, key=unvisited.get) # get the lowest weighted node 
         return dijkstra(graph,x,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node
-                
+        #else:
+            #return dijkstra(graph,dest,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node   
 
 
 if __name__ == "__main__":

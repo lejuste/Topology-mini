@@ -46,7 +46,7 @@ class HashedRouting(Routing):
 
     def get_route(self, src, dst):
         ''' Return flow path. '''
-        return HashHelperFunction(topo,src,dst)
+        return HashHelperFunction(self.topo,src,dst)
 
         
 
@@ -55,9 +55,16 @@ class DijkstraRouting(Routing):
 
     def __init__(self, topo):
         self.topo = topo
+        self.count = 0;
 
     def get_route(self, src, dst):
         ''' Return flow path. '''
-        return dijkstraHelperFunction(topo,src,dst):
+        print("source: " + str(src))
+        print("dest: " + str(dst))
+        '''self.count == 0;
+            return dijkstraHelperFunction(self.topo,src,dst)
+        else:
+            count++;'''
+        return dijkstraHelperFunction(self.topo,src,dst)
 
         

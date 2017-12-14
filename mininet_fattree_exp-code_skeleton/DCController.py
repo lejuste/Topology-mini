@@ -158,16 +158,18 @@ class DCController(EventMixin):
         out_name = self.t.id_gen(dpid = out_dpid).name_str()
         # hash_ = self._ecmp_hash(packet)
         route = self.r.get_route(in_name, out_name)
-        log.info("route: %s" % route)
+        #log.info("route: %s" % route)
         match = of.ofp_match.from_packet(packet)
         for i, node in enumerate(route):
+            #print("i: " + str(i))
+            #print("node: " + str(node))
             node_dpid = self.t.id_gen(name = node).dpid
             if i < len(route) - 1:
                 next_node = route[i + 1]
                 out_port, next_in_port = self.t.port(node, next_node)
             else:
                 out_port = final_out_port
-            self.switches[node_dpid].install(out_port, match, idle_timeout = IDLE_TIMEOUT)
+            self.switches[node_dpid].install(out_port, match, idle_timeout = 10)
         
     def _handle_FlowStatsReceived (self, event):
         pass

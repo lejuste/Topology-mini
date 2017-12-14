@@ -100,6 +100,7 @@ class FatTreeTopo(Topo):
 
         for p in pods:
             # print "p: " + str(p)
+            count = 1;
             for e in edge_sws:
                 # print "e: " + str(e)
                 edge_id = self.id_gen(p, e, 1).name_str()
@@ -107,7 +108,9 @@ class FatTreeTopo(Topo):
                 edge_opts = self.def_nopts(self.LAYER_EDGE, edge_id)
                 self.edgeList.append(edge_id)
                 self.addSwitch(edge_id, **edge_opts)
-
+                
+                upCount = 1
+                downCount = 1
                 for h in hosts:
                     # print "h: " + str(h)
                     host_id = self.id_gen(p, e, h).name_str()
@@ -115,7 +118,8 @@ class FatTreeTopo(Topo):
                     host_opts = self.def_nopts(self.LAYER_HOST, host_id)
                     self.hostList.append(host_id)
                     self.addHost(host_id, **host_opts)
-                    self.addLink(host_id, edge_id)
+                    self.addLink(host_id, edge_id)#, upCount, downCount)
+                    downCount = downCount + 1          
 
                 for a in agg_sws:
                     # print "a: " + str(a)
@@ -124,7 +128,8 @@ class FatTreeTopo(Topo):
                     agg_opts = self.def_nopts(self.LAYER_AGG, agg_id)
                     self.aggList.append(agg_id)
                     self.addSwitch(agg_id, **agg_opts)
-                    self.addLink(edge_id, agg_id)
+                    self.addLink(edge_id, agg_id)#, upCount, downCount)
+
 
             for a in agg_sws:
                 # print "a: " + str(a)
