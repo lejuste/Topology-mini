@@ -5,7 +5,7 @@
 import logging
 from copy import copy
 from Dijkstras import dijkstraHelperFunction
-
+from Hashed import HashHelperFunction
 
 class Routing(object):
     '''Base class for data center network routing.
@@ -21,15 +21,15 @@ class Routing(object):
         self.topo = topo
         
 
-    def get_route(self, src, dst, hash_):
+    def get_route(self, src, dst):
         '''Return flow path.
 
         @param src source host
         @param dst destination host
-        @param hash_ hash value
 
         @return flow_path list of DPIDs to traverse (including hosts)
         '''
+
         raise NotImplementedError
 
 class HashedRouting(Routing):
@@ -37,11 +37,18 @@ class HashedRouting(Routing):
 
     def __init__(self, topo):
         self.topo = topo
+        self.path_choice = path_choice
+        self.src_paths = None
+        self.dst_paths = None
+        self.src_path_layer = None
+        self.dst_path_layer = None
 
-    def get_route(self, src, dst, hash_):
+
+    def get_route(self, src, dst):
         ''' Return flow path. '''
-        
+        return HashHelperFunction(topo,src,dst)
 
+        
 
 class DijkstraRouting(Routing):
     ''' Dijkstra routing '''
@@ -51,9 +58,6 @@ class DijkstraRouting(Routing):
 
     def get_route(self, src, dst):
         ''' Return flow path. '''
-        print "X"*100
-        for node in topo.g.nodes():
-            print node
-        print "X"*100
-        dijkstraHelperFunction(G,'0_0_1','0_1_1')
+        return dijkstraHelperFunction(topo,src,dst):
+
         

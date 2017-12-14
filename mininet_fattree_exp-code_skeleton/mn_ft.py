@@ -24,10 +24,10 @@ from monitor.monitor import monitor_devs_ng
 import os
 
 ###################################### Hash & Dijkstras Test ######################################################
-import networkx as nx
-from Hashed import HashHelperFunction
-from Dijkstras import dijkstraHelperFunction
-G=nx.Graph()
+# import networkx as nx
+# from Hashed import HashHelperFunction
+# from Dijkstras import dijkstraHelperFunction
+# G=nx.Graph()
 ###################################### Hash & Dijkstras Test ######################################################
 
 
@@ -86,17 +86,17 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     topo = FatTreeTopo(k)
 
     ###################################### Hash & Dijkstras Test ######################################################
-    print ''
-    print 'Hashed Test'
-    HashHelperFunction(topo,'0_0_2','3_1_2')
-    HashHelperFunction(topo,'0_0_3','3_1_2')
-    print ''    
-    print 'Dijkstra Test'
-    dijkstraHelperFunction(topo,'0_0_2','3_1_2')
-    dijkstraHelperFunction(topo,'0_0_3','3_1_2')
-    print ''
-    print 'test:'
-    HashHelperFunction(topo,'2_1_2','0_0_2')
+    # print ''
+    # print 'Hashed Test'
+    # HashHelperFunction(topo,'0_0_2','3_1_2')
+    # HashHelperFunction(topo,'0_0_3','3_1_2')
+    # print ''    
+    # print 'Dijkstra Test'
+    # dijkstraHelperFunction(topo,'0_0_2','3_1_2')
+    # dijkstraHelperFunction(topo,'0_0_3','3_1_2')
+    # print ''
+    # print 'test:'
+    # HashHelperFunction(topo,'2_1_2','0_0_2')
     ###################################### Hash & Dijkstras Test ######################################################
 
     host = custom(CPULimitedHost, cpu=cpu)

@@ -20,6 +20,8 @@ from pox.lib.packet.udp import udp
 from pox.lib.packet.tcp import tcp
 
 from util import buildTopo, getRouting
+from Hashed import HashHelperFunction
+from Dijkstras import dijkstraHelperFunction
 
 
 log = core.getLogger()
@@ -152,10 +154,10 @@ class DCController(EventMixin):
     def _install_reactive_path(self, event, out_dpid, final_out_port, packet):
         ''' Install entries on route between two switches. '''
         print("INSTALL REACTIVE PATH CALLED")
-        '''in_name = self.t.id_gen(dpid = event.dpid).name_str()
+        in_name = self.t.id_gen(dpid = event.dpid).name_str()
         out_name = self.t.id_gen(dpid = out_dpid).name_str()
-        hash_ = self._ecmp_hash(packet)
-        route = self.r.get_route(in_name, out_name, hash_)
+        # hash_ = self._ecmp_hash(packet)
+        route = self.r.get_route(in_name, out_name)
         log.info("route: %s" % route)
         match = of.ofp_match.from_packet(packet)
         for i, node in enumerate(route):
@@ -165,7 +167,7 @@ class DCController(EventMixin):
                 out_port, next_in_port = self.t.port(node, next_node)
             else:
                 out_port = final_out_port
-            self.switches[node_dpid].install(out_port, match, idle_timeout = IDLE_TIMEOUT)'''
+            self.switches[node_dpid].install(out_port, match, idle_timeout = IDLE_TIMEOUT)
         
     def _handle_FlowStatsReceived (self, event):
         pass
