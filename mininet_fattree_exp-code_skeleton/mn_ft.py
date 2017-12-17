@@ -123,7 +123,8 @@ def install_proactive(net, topo):
     """
         Install proactive flow entries for switches.
     """
-    pass
+    print topo.k
+    print 'topo.k'
 
 def file_len(fname):
     with open(fname) as f:
@@ -208,7 +209,8 @@ def FatTreeTest(args,controller):
     uncomment and implement the following fucntion if flow tables are installed proactively, 
     in this mode, the mininet can work without a controller
     '''
-    # install_proactive(net, topo)
+    print 'installing proactive pathssss'*15
+    install_proactive(net, net.topo)
 
 
     # wait for the switches to connect to the controller

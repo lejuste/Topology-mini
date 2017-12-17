@@ -46,7 +46,15 @@ def HashHelperFunction(topo,src,dst):
     # print graphDic
     path = HashedDijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
     #print path
-
+    if path == 0:
+        graphDic = {} #empty dictionary
+        for node in topoG.nodes(): # make switch dictionary without links
+            graphDic[node] = {}
+        for edge in topoG.edges(): # adds each link to each switch
+            graphDic[edge[0]][edge[1]] = 1
+            graphDic[edge[1]][edge[0]] = 1
+        path = HashedDijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
+           
     # make dpid list
     dpidPath = []
     for switch in path:
@@ -61,11 +69,14 @@ def HashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
     """ calculates a shortest path tree routed in src
     """    
     # a few sanity checks
-
     if src not in graph:
-        raise TypeError('The root of the shortest path tree cannot be found')
+        print src
+        print graph
+        return 0
     if dest not in graph:
-        raise TypeError('The target of the shortest path cannot be found')    
+        print dest
+        print graph
+        return 0
     # ending condition
 
     if src == dest: #if source and destination are the same print out shorest path and exit
