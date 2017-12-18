@@ -7,8 +7,7 @@ def dijkstraHelperFunction(topo,src,dst):
     calls dijkstras on it
 
     '''
-    #print 'src: ' + src
-    #print 'dst: ' + dst
+
 
     topoG = topo.g
 
@@ -19,17 +18,11 @@ def dijkstraHelperFunction(topo,src,dst):
         graphDic[edge[0]][edge[1]] = 1
         graphDic[edge[1]][edge[0]] = 1
 
-    # print 'linkDictionary: '
-    # print graphDic
-    #path = dijkstra(graphDic,src,dst)
-    #path = dijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
     path = dijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
-    #print path
 
     dpidPath = []
     for switch in path:
         dpidPath.append(topo.id_gen(name = switch).dpid)
-    #print dpidPath
 
     return path
 
@@ -51,8 +44,6 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
         while pred != None: # create 
             path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
-        # print('shortest path: '+str(path)+" cost="+str(distances[dest])) #print out the path and distances
-        #print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
         return tuple(reversed(path))
 
     else :     
@@ -77,26 +68,18 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
             if k not in visited: #if node is not in visited,
                 unvisited[k] = distances.get(k,float('inf')) # add the weigths of every unvisited node
         x=0
-        #print("Unvistited: " + str(unvisited))
-        #if unvisited:
         x=min(unvisited, key=unvisited.get) # get the lowest weighted node 
         return dijkstra(graph,x,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node
-        #else:
-            #return dijkstra(graph,dest,dest,visited,distances,predecessors) # run dijkstra's algorithm on cheapest node   
+ 
 
 
-if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
-    #unittest.main()
-
-    # switches:
-    # 0_0_1 0_1_1 0_2_1 0_3_1 1_0_1 1_1_1 1_2_1 1_3_1 2_0_1 2_1_1 2_2_1 2_3_1 3_0_1 3_1_1 3_2_1 3_3_1 4_1_1 4_1_2 4_2_1 4_2_2 
+'''if __name__ == "__main__":
+# testing not possible cause topo object required
 
     graph = {'s': {'a': 2, 'b': 1},
             'a': {'s': 3, 'b': 4, 'c':8},
             'b': {'s': 4, 'a': 2, 'd': 2},
             'c': {'a': 2, 'd': 7, 't': 4},
             'd': {'b': 1, 'c': 11, 't': 5},
-            't': {'c': 3, 'd': 5}}
+            't': {'c': 3, 'd': 5}}'''
 
-#    dijkstra(graph,'s','t')

@@ -84,22 +84,18 @@ class DCController(EventMixin):
         core.openflow.addListeners(self)
 
     def getSrcIp(self, packet):
-        #return str(packet.payload).split(" ")[5].split(">")[0]
         l = str(packet.payload).split(">")[1].split(" ")[1].split(">")
         return str(l[0])
 
     def getDestIp(self, packet):
-        #return str(packet.payload).split(" ")[5].split(">")[1]
         l = str(packet.payload).split(">")[1].split(" ")[1].split(">")
         return str(l[1])
 
     def getMacSrcAddr(self, packet):
-        #return str(packet.payload).split(" ")[4].split(">")[0]
         l = str(packet.payload).split(">")[0].split(" ")
         return str(l[len(l)-1])
 
     def getMacDestAddr(self, packet):
-        #return str(packet.payload).split(" ")[4].split(">")[1]
         l = str(packet.payload).split(">")[1].split(" ")
         return str(l[0])
     def _raw_dpids(self, arr):
@@ -113,56 +109,40 @@ class DCController(EventMixin):
         
     def _flood(self, event):
         ''' Broadcast to every output port '''
-        #print("FLOOD IS CALLED")
         packet = event.parse()
         dpid = event.dpid
         in_port = event.port
         t = self.t
-        #print("in_port: " + str(in_port))
-        #print("event_dpid: " + str(dpid))
+     
         nodes = t.layer_nodes(t.LAYER_EDGE)
         dpids = self._raw_dpids(t.layer_nodes(t.LAYER_EDGE))
-        #print("dpids: " + str(dpids))
-        #print("nodes: " + str(nodes))
+        
 
         for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
             ports = []
             sw_name = t.id_gen(dpid = sw).name_str()
-            #print("sw_name: " + str(sw_name))
-            #print("sw_dpid: " + str(sw))
             switch_Hosts = []
             for host in t.layer_nodes(t.LAYER_HOST):
                 if((host[0] == sw_name[0])and (host[2] == sw_name[2])):
         	    switch_Hosts.append(host)
-            #print(switch_Hosts)
             for host in switch_Hosts:
                 sw_port, host_port = t.port(sw_name, host)
-                #print("sw_port: " + str(sw_port))
-                #print("host_port: " + str(host_port))
                 if sw != dpid or (sw == dpid and in_port != sw_port):
-                    #print("Appended")
                     ports.append(sw_port)
-            #print ports'''
-            #ports = [1,2]
             for port in ports:
                 self.switches[sw].send_packet_data(port, event.data)
-	'''for sw in self._raw_dpids(t.layer_nodes(t.LAYER_EDGE)):
-            if 
-	    self.switches[sw].send_packet_data(port, event.data)'''
+
     
 
     def _install_reactive_path(self, event, out_dpid, final_out_port, packet):
         ''' Install entries on route between two switches. '''
-        print("INSTALL REACTIVE PATH CALLED")
         in_name = self.t.id_gen(dpid = event.dpid).name_str()
         out_name = self.t.id_gen(dpid = out_dpid).name_str()
         # hash_ = self._ecmp_hash(packet)
         route = self.r.get_route(in_name, out_name)
-        #log.info("route: %s" % route)
+        
         match = of.ofp_match.from_packet(packet)
         for i, node in enumerate(route):
-            #print("i: " + str(i))
-            #print("node: " + str(node))
             node_dpid = self.t.id_gen(name = node).dpid
             if i < len(route) - 1:
                 next_node = route[i + 1]
@@ -183,12 +163,6 @@ class DCController(EventMixin):
         in_port = event.port       
         t = self.t
 
-        #print statements
-        '''print("srcip: "+str(packet.next.srcip))
-        print("destip: " + str(packet.next.dstip))
-        print("MAC: " + str(packet.src))
-        print("type: " + str(packet.type))
-        print("packet: " + str(packet.payload))'''
 
         #if packet is notipv4, ignore
         if(str(packet.src) == "2048"):
@@ -200,7 +174,9 @@ class DCController(EventMixin):
 
         #add source mac address in mac table, with dpid and in_port as values
         self.macTable[str(srcMac)] = (dpid, in_port)
-        print(self.macTable)
+        #print(self.macTable)
+        #print("srcip: "+str(packet.next.srcip))
+        #print("destip: " + str(packet.next.dstip))
            
 
         #if destination mac address is in mac table, install reactive path. else flood. 
@@ -218,7 +194,7 @@ class DCController(EventMixin):
         sw = self.switches.get(event.dpid)
         sw_str = dpidToStr(event.dpid)
         sw_name = self.t.id_gen(dpid = event.dpid).name_str()
-        self.macTable.clear()
+        self.macTable.clear() #clear macTable when there is a new conection
         
         if sw_name not in self.t.switches():
             log.warn("Ignoring unknown switch %s" % sw_str)

@@ -81,40 +81,16 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     elif args.dij:
         pox_c = Popen("./pox.py %s --topo=ft,4 --routing=dij"%controller, shell=True)
     else:
-        info('**error** the routing scheme should be ecmp or dijkstra\n')
-
-    print("Error Code: " + str(pox_c.returncode))
-    print (" &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")'''
+        info('**error** the routing scheme should be ecmp or dijkstra\n')'''
     
     info('*** Creating the topology')
     topo = FatTreeTopo(k)
-
-    ###################################### Hash & Dijkstras Test ######################################################
-    # print ''
-    # print 'Hashed Test'
-    # HashHelperFunction(topo,'0_0_2','3_1_2')
-    # HashHelperFunction(topo,'0_0_3','3_1_2')
-    # print ''    
-    # print 'Dijkstra Test'
-    # dijkstraHelperFunction(topo,'0_0_2','3_1_2')
-    # dijkstraHelperFunction(topo,'0_0_3','3_1_2')
-    # print ''
-    # print 'test:'
-    # HashHelperFunction(topo,'2_1_2','0_0_2')
-    ###################################### Hash & Dijkstras Test ######################################################
 
     host = custom(CPULimitedHost, cpu=cpu)
     link = custom(TCLink, bw=bw, max_queue_size=queue)
     
     net = Mininet(topo, host=host, link=link, switch=OVSKernelSwitch,
             controller=RemoteController, autoStaticArp=True)
-
-    '''c0=net.addController(name='c0',
-                      controller=RemoteController,
-                      ip='127.0.0.1',
-                      protocol='tcp',
-                      port=6633)
-    c0.start()'''
 
     return net
 
@@ -135,29 +111,13 @@ def file_len(fname):
 def iperfTrafficGen(args, hosts, net):
     ''' 
     Generate traffic pattern using iperf and monitor all of the interface
-    h0_0_2, h2_1_2 = net.get('10.0.0.2', '2_1_2')
-    #h1.do_xterm("0_0_2")
-    h2_1_2.cmd('iperf -s -p 5566 -i 1 &')
-    str = h0_0_2.cmd('iperf -c 10.2.1.2 -p 5566 -t 10')
-    file = open("./results/test", 'w')
-    file.write(str)
-    file.close() 
-
-        #output_filename = args.input_file.split('/')
-    #print output_filename
-    #output_filedir = args.output_dir# + output_filename[-1]
-    print args.output_dir
-    " + str(t) + "
     '''
-    #CLI(net)
     num_lines = file_len(args.input_file)
     print num_lines
     f = open(args.input_file, 'r')
 
-    #output = open(args.output_dir+"/data",'a')
-    output = open("./results/test", "a")
+    output = open(args.output_dir+"/data",'a')
     output.write(args.output_dir)
-    output.write("#######################################################################")
     t = args.time/(num_lines-1)
     info("Starting Experiment\n")
     for line in f: 
@@ -184,16 +144,8 @@ def iperfTrafficGen(args, hosts, net):
         dest_host.cmd("pkill iperf")
         src_host.cmd("pkill iperf")
         output.write(s_out+'\n')
-        print("-------------------------------------------------")
         print h1, h2
-        print(str(t))
-        print("******************************")
-        print(d_out)
-        print("#############################")
-        print(s_out)
-        print("******************************")
     info("Finished\n")
-    output.write("#######################################################################")
     output.close()
     f.close()
 

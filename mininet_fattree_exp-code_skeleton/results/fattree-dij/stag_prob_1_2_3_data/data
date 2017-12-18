@@ -1,0 +1,110 @@
+results/fattree-dij/stag_prob_1_2_3_dataconnect failed: Connection refused
+
+------------------------------------------------------------
+Client connecting to 10.0.1.3, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.0.0.3 port 60812 connected with 10.0.1.3 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.1 sec  3.75 MBytes  10.1 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.1.1.3, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.0.1.2 port 56426 connected with 10.1.1.3 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  4.00 MBytes  10.6 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.0.1.2, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.0.1.3 port 36968 connected with 10.0.1.2 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  3.75 MBytes  9.80 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.3.1.3, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.1.0.2 port 43096 connected with 10.3.1.3 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  4.00 MBytes  10.5 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.0.0.3, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.1.0.3 port 52794 connected with 10.0.0.3 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  3.88 MBytes  10.2 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.2.0.3, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.1.1.2 port 59970 connected with 10.2.0.3 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.0 sec  4.00 MBytes  11.2 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.1.0.2, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.1.1.3 port 37790 connected with 10.1.0.2 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.1 sec  3.75 MBytes  10.0 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.2.1.3, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.2.0.2 port 35032 connected with 10.2.1.3 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.1 sec  3.88 MBytes  10.6 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.2.0.2, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.2.0.3 port 60406 connected with 10.2.0.2 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  3.75 MBytes  9.90 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.3.0.3, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.2.1.2 port 40258 connected with 10.3.0.3 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.1 sec  4.00 MBytes  10.9 Mbits/sec
+
+------------------------------------------------------------
+Client connecting to 10.0.0.2, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.2.1.3 port 49064 connected with 10.0.0.2 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  3.75 MBytes  9.78 Mbits/sec
+
+connect failed: Connection refused
+
+------------------------------------------------------------
+Client connecting to 10.3.0.2, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.3.0.3 port 34668 connected with 10.3.0.2 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  3.75 MBytes  9.86 Mbits/sec
+
+connect failed: Connection refused
+
+------------------------------------------------------------
+Client connecting to 10.2.1.2, TCP port 12345
+TCP window size: 85.3 KByte (default)
+------------------------------------------------------------
+[  3] local 10.3.1.3 port 44342 connected with 10.2.1.2 port 12345
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0- 3.2 sec  3.75 MBytes  9.98 Mbits/sec
+
