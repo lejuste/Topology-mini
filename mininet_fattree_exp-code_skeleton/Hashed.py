@@ -23,7 +23,7 @@ def HashHelperFunction(topo,src,dst):
     # finds bucket for given src,dst pair
     flowHash = hash(src+dst)
     bucket_num = flowHash%4
-    print 'bucket_num: ' + str(bucket_num)
+    #print 'bucket_num: ' + str(bucket_num)
 
     graphDic = {} #empty dictionary
     for node in topoG.nodes(): # make empty switch dictionary without unwanted core switches
@@ -45,13 +45,13 @@ def HashHelperFunction(topo,src,dst):
     # print 'linkDictionary: '
     # print graphDic
     path = HashedDijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
-    print path
+    #print path
 
     # make dpid list
     dpidPath = []
     for switch in path:
         dpidPath.append(topo.id_gen(name = switch).dpid)
-    print dpidPath
+    #print dpidPath
 
     return path
 
@@ -75,7 +75,7 @@ def HashedDijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
         while pred != None: # create 
             path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
-        print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
+        #print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
         return tuple(reversed(path))
 
     else :     

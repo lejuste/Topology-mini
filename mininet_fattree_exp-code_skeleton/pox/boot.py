@@ -79,7 +79,6 @@ def _do_import (name):
 
   def do_import2 (base_name, names_to_try):
     if len(names_to_try) == 0:
-      print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$Module not found:", base_name)
       return False
 
     name = names_to_try.pop(0)

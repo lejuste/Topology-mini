@@ -8,13 +8,7 @@ do
         input_file=$INPUT_DIR/$f
         pref="fattree-ecmp"
         out_dir=$OUTPUT_DIR/$pref/$f
-        sudo python mn_ft.py -i $input_file -d $out_dir -p 0.03 -t $DURATION --ecmp --iperf
+        sudo python mn_ft.py -i $input_file -d $out_dir -p 0.03 -t $DURATION --ECMP --iperf
         sudo mn -c
 done
 sudo python clean.py
-
-# dijkstra
- 
-# two-level routing
-
-

@@ -22,13 +22,14 @@ def dijkstraHelperFunction(topo,src,dst):
     # print 'linkDictionary: '
     # print graphDic
     #path = dijkstra(graphDic,src,dst)
+    #path = dijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
     path = dijkstra(graphDic,src,dst,visited=[],distances={},predecessors={})
-    print path
+    #print path
 
     dpidPath = []
     for switch in path:
         dpidPath.append(topo.id_gen(name = switch).dpid)
-    print dpidPath
+    #print dpidPath
 
     return path
 
@@ -51,7 +52,7 @@ def dijkstra(graph,src,dest,visited=[],distances={},predecessors={}):
             path.append(pred) # append list path to show the prgevious predecessors
             pred=predecessors.get(pred,None) # get next predecessor and if none return none this breaks the next loop
         # print('shortest path: '+str(path)+" cost="+str(distances[dest])) #print out the path and distances
-        print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
+        #print('shortest path: '+str(tuple(reversed(path)))+" cost="+str(distances[dest])) #print out the path and distances
         return tuple(reversed(path))
 
     else :     

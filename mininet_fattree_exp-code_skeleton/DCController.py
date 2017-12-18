@@ -113,7 +113,7 @@ class DCController(EventMixin):
         
     def _flood(self, event):
         ''' Broadcast to every output port '''
-        print("FLOOD IS CALLED")
+        #print("FLOOD IS CALLED")
         packet = event.parse()
         dpid = event.dpid
         in_port = event.port
@@ -184,11 +184,11 @@ class DCController(EventMixin):
         t = self.t
 
         #print statements
-        print("srcip: "+str(packet.next.srcip))
+        '''print("srcip: "+str(packet.next.srcip))
         print("destip: " + str(packet.next.dstip))
         print("MAC: " + str(packet.src))
         print("type: " + str(packet.type))
-        print("packet: " + str(packet.payload))
+        print("packet: " + str(packet.payload))'''
 
         #if packet is notipv4, ignore
         if(str(packet.src) == "2048"):
@@ -218,6 +218,7 @@ class DCController(EventMixin):
         sw = self.switches.get(event.dpid)
         sw_str = dpidToStr(event.dpid)
         sw_name = self.t.id_gen(dpid = event.dpid).name_str()
+        self.macTable.clear()
         
         if sw_name not in self.t.switches():
             log.warn("Ignoring unknown switch %s" % sw_str)

@@ -74,6 +74,8 @@ args = parser.parse_args()
 def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     ''' Create a Fat-Tree network '''
     
+
+    '''info("STARTING CONTROLLER ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
     if args.ECMP:
         pox_c = Popen("./pox.py %s --topo=ft,4 --routing=ECMP"%controller, shell=True)
     elif args.dij:
@@ -81,7 +83,9 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     else:
         info('**error** the routing scheme should be ecmp or dijkstra\n')
 
-    print("RETURN CODE: " + str(pox_c.returncode))
+    print("Error Code: " + str(pox_c.returncode))
+    print (" &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")'''
+    
     info('*** Creating the topology')
     topo = FatTreeTopo(k)
 
@@ -103,7 +107,14 @@ def FatTreeNet(args, k=4, bw=10, cpu=-1, queue=100, controller='DCController'):
     link = custom(TCLink, bw=bw, max_queue_size=queue)
     
     net = Mininet(topo, host=host, link=link, switch=OVSKernelSwitch,
-            controller=RemoteController)
+            controller=RemoteController, autoStaticArp=True)
+
+    '''c0=net.addController(name='c0',
+                      controller=RemoteController,
+                      ip='127.0.0.1',
+                      protocol='tcp',
+                      port=6633)
+    c0.start()'''
 
     return net
 
@@ -114,12 +125,77 @@ def install_proactive(net, topo):
     """
     pass
 
+def file_len(fname):
+    with open(fname) as f:
+        for i, l in enumerate(f):
+            pass
+    return i 
+
 
 def iperfTrafficGen(args, hosts, net):
     ''' 
     Generate traffic pattern using iperf and monitor all of the interface
+    h0_0_2, h2_1_2 = net.get('10.0.0.2', '2_1_2')
+    #h1.do_xterm("0_0_2")
+    h2_1_2.cmd('iperf -s -p 5566 -i 1 &')
+    str = h0_0_2.cmd('iperf -c 10.2.1.2 -p 5566 -t 10')
+    file = open("./results/test", 'w')
+    file.write(str)
+    file.close() 
+
+        #output_filename = args.input_file.split('/')
+    #print output_filename
+    #output_filedir = args.output_dir# + output_filename[-1]
+    print args.output_dir
+    " + str(t) + "
     '''
-    pass
+    #CLI(net)
+    num_lines = file_len(args.input_file)
+    print num_lines
+    f = open(args.input_file, 'r')
+
+    #output = open(args.output_dir+"/data",'a')
+    output = open("./results/test", "a")
+    output.write(args.output_dir)
+    output.write("#######################################################################")
+    t = args.time/(num_lines-1)
+    info("Starting Experiment\n")
+    for line in f: 
+        l = line.split(" ")
+
+        if len(l) < 2:
+            continue
+
+        src = l[0]
+        dest = l[1]
+        s = src.split('.')
+        d = dest.split('.')
+
+        
+        if len(s) is not 4:
+            continue
+
+        h1 = s[1] + '_' + s[2] + '_' + s[3]
+        h2 = d[1] + '_' + d[2] + '_' + d[3]
+
+        src_host, dest_host = net.get(h1, h2)
+        d_out = dest_host.cmd("iperf -s -p 12345 -t " + str(t) + " &")
+        s_out = src_host.cmd("iperf -c "+ dest +" -p 12345 -t " + str(t))
+        dest_host.cmd("pkill iperf")
+        src_host.cmd("pkill iperf")
+        output.write(s_out+'\n')
+        print("-------------------------------------------------")
+        print h1, h2
+        print(str(t))
+        print("******************************")
+        print(d_out)
+        print("#############################")
+        print(s_out)
+        print("******************************")
+    info("Finished\n")
+    output.write("#######################################################################")
+    output.close()
+    f.close()
 
 
 def FatTreeTest(args,controller):
@@ -137,7 +213,7 @@ def FatTreeTest(args,controller):
 
     # wait for the switches to connect to the controller
     info('** Waiting for switches to connect to the controller\n')
-    sleep(5)
+    sleep(4)
 
     hosts = net.hosts
     
@@ -166,7 +242,7 @@ if __name__ == '__main__':
         print args.output_dir
         os.makedirs(args.output_dir)
 
-    clean()
+    #clean()
 
     if args.ECMP:
         FatTreeTest(args,controller='DCController')
@@ -178,7 +254,7 @@ if __name__ == '__main__':
     else:
         info('**error** please specify either ecmp, dijkstra or tlr\n')
         
-    clean()
+    #clean()
 
     Popen("killall -9 top bwm-ng", shell=True).wait()
-    os.system('sudo mn -c')
+    #os.system('sudo mn -c')

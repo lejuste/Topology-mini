@@ -6,15 +6,9 @@ DURATION=50
 for f in $INPUT_FILES;
 do
         input_file=$INPUT_DIR/$f
-        pref="fattree-ecmp"
+        pref="fattree-dij"
         out_dir=$OUTPUT_DIR/$pref/$f
-        sudo python mn_ft.py -i $input_file -d $out_dir -p 0.03 -t $DURATION --ecmp --iperf
+        sudo python mn_ft.py -i $input_file -d $out_dir -p 0.03 -t $DURATION --dij --iperf
         sudo mn -c
 done
 sudo python clean.py
-
-# dijkstra
- 
-# two-level routing
-
-
